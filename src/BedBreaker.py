@@ -12,6 +12,21 @@ import re
 ## TODO: Create a class for an entry
 ## Chr, start, end, type, score, strand
 
+class BEDentry:
+    def __init__(self, chr, start, end, type, score, strand):
+        self.chr = chr
+        self.start = start
+        self.end = end
+        self.type = type
+        self.score = score
+        self.strand = strand
+        
+    def printEntry(self):
+        return self.chr + '\t' + self.start + '\t' + self.end + '\t' + self.type + '\t' + self.score + '\t' + self.strand + '\n'
+
+def convertScore(bdscore):
+    return str(int(bdscore) * 10)
+
 def getOrientationInfo(orientation):
     ## Orientation is: <no_reads><pos_strand><no_reads><neg_strand>. E.g. 12+12-
     ori_parts = re.search(r'(\d+)(\+)(\d+)(\-)', orientation)
@@ -37,11 +52,6 @@ def main():
                   
     args = argparser.parse_args()
     
-    #print "Hello, this is the input arguments"
-    
-    #print "\"input\" argument:", args.input
-    #print "\"output\" argument:", args.output
-    
     # TODO: Input sanity check
     inputFile = args.input
     outputFile = args.output
@@ -59,7 +69,7 @@ def main():
             chromosomes = [splitline[0], splitline[3]]
             start_pos = splitline[1]
             end_pos = splitline[4]
-            score = splitline[8]
+            score = convertScore(splitline[8])
             sv_type = splitline[6]
             
             ## Check whether or not the chromosomes in the SV breakpoints are the same
@@ -71,12 +81,10 @@ def main():
                 ## Positive strand:
                 if isNotZero(oInfo[0][0]) and isNotZero(oInfo[0][1]):
                     ## If yes: move on to printing
-                    chrToPrint = "chr %s" % chromosomes[0]
-                    startEndToPrint = "%s %s %s" % (start_pos, '\t', end_pos)
-                    strandToPrint = "+"
                     
-                    ### PRINT THE INFO
-                    print chrToPrint, startEndToPrint, sv_type, score, strandToPrint
+                    entry = BEDentry(chromosomes[0], start_pos, end_pos, sv_type, score, "+")
+                    print entry.printEntry(),
+                    FH_OUTPUT.write(entry.printEntry())
                 
                 ## Check if only one breakpoint has reads on the positive strand    
 #                else:                    
@@ -92,19 +100,13 @@ def main():
                 ## Negative strand:
                 if isNotZero(oInfo[1][0]) and isNotZero(oInfo[1][1]):
                     ## If yes: move on to printing
-                    chrToPrint = "chr %s" % chromosomes[0]
-                    startEndToPrint = "%s %s %s" % (start_pos, '\t', end_pos)
-                    strandToPrint = "-"
-                    
-                    ### PRINT THE INFO
-                    print chrToPrint, startEndToPrint, sv_type, score, strandToPrint
-                    
-                #Chromosome = "chr %s%s" % (splitline[0], '\t')
-                #Start_Stop"%s %s %s" % (splitline[1], '\t', splitline[4])
+                    entry = BEDentry(chromosomes[0], start_pos, end_pos, sv_type, score, "-")
+                    print entry.printEntry(),
+                    FH_OUTPUT.write(entry.printEntry())
             
             else:
 
-                for chr in chromosomes:
+                for chromosome in chromosomes:
                     
                     oInfo = (getOrientationInfo(splitline[2]), getOrientationInfo(splitline[5]))
                                                           
@@ -112,12 +114,9 @@ def main():
                     ## Positive strand:
                     if isNotZero(oInfo[0][0]) and isNotZero(oInfo[0][1]):
                         ## If yes: move on to printing
-                        chrToPrint = "chr %s" % chr
-                        startEndToPrint = "%s %s %s" % (start_pos, '\t', end_pos)
-                        strandToPrint = "+"
-                        
-                        ### PRINT THE INFO
-                        print chrToPrint, startEndToPrint, sv_type, score, strandToPrint
+                        entry = BEDentry(chromosome, start_pos, end_pos, sv_type, score, "+")
+                        print entry.printEntry(),
+                        FH_OUTPUT.write(entry.printEntry())
                     
                     ## Check if only one breakpoint has reads on the positive strand    
     #                else:                    
@@ -133,24 +132,11 @@ def main():
                     ## Negative strand:
                     if isNotZero(oInfo[1][0]) and isNotZero(oInfo[1][1]):
                         ## If yes: move on to printing
-                        chrToPrint = "chr %s" % chr
-                        startEndToPrint = "%s %s %s" % (start_pos, '\t', end_pos)
-                        strandToPrint = "-"
-                        
-                        ### PRINT THE INFO
-                        print chrToPrint, startEndToPrint, sv_type, score, strandToPrint
-
+                        entry = BEDentry(chromosome, start_pos, end_pos, sv_type, score, "-")
+                        print entry.printEntry(),
+                        FH_OUTPUT.write(entry.printEntry())
             
-            #OrientationInfo2 = getOrientationInfo(splitline[5])
-            
-            #for i in range(0, 1):
-            #    for j in range(0, 1):
-            #       if OrientationInfo[i][j] != "0":
-                        
-            
-            FH_OUTPUT.write("\n")
-    
-    
+            #FH_OUTPUT.write("\n")
     
     FH_INPUT.close()
     FH_OUTPUT.close()
