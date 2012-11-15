@@ -9,14 +9,11 @@ Created on Nov 14, 2012
 import argparse
 import re
 
-## TODO: Create a class for an entry
-## Chr, start, end, type, score, strand
-
 class BEDentry:
     def __init__(self, chr, start, end, type, score, strand):
         self.chr = chr
-        self.start = start
-        self.end = end
+        self.start = str(int(start)-1)
+        self.end = str(int(end)-1)
         self.type = type
         self.score = score
         self.strand = strand
