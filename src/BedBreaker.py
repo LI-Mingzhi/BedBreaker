@@ -9,6 +9,7 @@ Created on Nov 14, 2012
 import argparse
 import re
 import bdParser
+import xhmmParser
 
 def isNotZero(numReads):
     if numReads == "0":
@@ -28,6 +29,10 @@ def main():
     
     argparser.add_argument("type",
                            help="Input file type. [bb|xhmm] (BedBreaker|XHMM])")
+    
+    argparser.add_argument("-minScore",
+                           type=int,
+                           help="Minimum score threshold (1-99)")
                   
     args = argparser.parse_args()
     
@@ -35,18 +40,20 @@ def main():
     inputFile = args.input
     outputFile = args.output
     inputType = args.type
-    
+    minScore = args.minScore
 
     
     ## Determine input type
     if inputType == "bd":
         print "Input type: bd"
         #dobreakdancerstuff
-        bdParser.main(inputFile, outputFile)
+        bdParser.main(inputFile, outputFile, minScore)
         
     elif inputType == "xhmm":
+        print "Input type: xhmm"
         #doxhmmstuff
-        print "Input type: xhmm" 
+        xhmmParser.main(inputFile, outputFile)
+
     
     
 

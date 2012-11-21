@@ -3,8 +3,8 @@ BedBreaker
 
 A format converter that converts multiple formats to the BED format. Currently supported input format are outputs from: BreakDancer and XHMM.
 
-Usage: python BedBreaker /path/to/inputFile /path/to/outputFile
+Usage: python BedBreaker /path/to/inputFile /path/to/outputFile inputType -minScore INT
 
-where inputFile is an output from BreakDancer and the output is a BED (.bed) file.
+where inputType is either bd (BreakDancer output) or xhmm (XHMM output)
 
-Just load the BED file into e.g. IGV and visualize the results from BreakDancer!
+Then load the BED file into e.g. IGV and visualize the results!

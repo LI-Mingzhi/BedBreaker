@@ -25,8 +25,9 @@ def isNotZero(numReads):
     else:
         return True
 
-def main(inputFile, outputFile):
+def main(inputFile, outputFile, minScore):
     
+    minScore = convertScore(minScore)
     FH_INPUT = open(inputFile, "rU")
     FH_OUTPUT = open(outputFile, "w")
     
@@ -53,9 +54,13 @@ def main(inputFile, outputFile):
                 if isNotZero(oInfo[0][0]) and isNotZero(oInfo[0][1]):
                     ## If yes: move on to printing
                     
-                    entry = bbClasses.BEDentry(chromosomes[0], start_pos, end_pos, sv_type, score, "+")
-                    print entry.printEntry(),
-                    FH_OUTPUT.write(entry.printEntry())
+                    ## Check score threshold
+                    if score >= minScore:                    
+                        entry = bbClasses.BEDentry(chromosomes[0], start_pos, end_pos, sv_type)
+                        entry.setScore(score)
+                        entry.setStrand("+")
+                        print entry.printEntry(),
+                        FH_OUTPUT.write(entry.printEntry())
                 
                 ## Check if only one breakpoint has reads on the positive strand    
 #                else:                    
@@ -71,9 +76,14 @@ def main(inputFile, outputFile):
                 ## Negative strand:
                 if isNotZero(oInfo[1][0]) and isNotZero(oInfo[1][1]):
                     ## If yes: move on to printing
-                    entry = bbClasses.BEDentry(chromosomes[0], start_pos, end_pos, sv_type, score, "-")
-                    print entry.printEntry(),
-                    FH_OUTPUT.write(entry.printEntry())
+                    
+                    ## Check score threshold
+                    if score >= minScore: 
+                        entry = bbClasses.BEDentry(chromosomes[0], start_pos, end_pos, sv_type)
+                        entry.setScore(score)
+                        entry.setStrand("-")
+                        print entry.printEntry(),
+                        FH_OUTPUT.write(entry.printEntry())
             
             else:
 
@@ -85,9 +95,14 @@ def main(inputFile, outputFile):
                     ## Positive strand:
                     if isNotZero(oInfo[0][0]) and isNotZero(oInfo[0][1]):
                         ## If yes: move on to printing
-                        entry = bbClasses.BEDentry(chromosome, start_pos, end_pos, sv_type, score, "+")
-                        print entry.printEntry(),
-                        FH_OUTPUT.write(entry.printEntry())
+                        
+                        ## Check score threshold
+                        if score >= minScore:                    
+                            entry = bbClasses.BEDentry(chromosome, start_pos, end_pos, sv_type)
+                            entry.setScore(score)
+                            entry.setStrand("+")
+                            print entry.printEntry(),
+                            FH_OUTPUT.write(entry.printEntry())
                     
                     ## Check if only one breakpoint has reads on the positive strand    
     #                else:                    
@@ -103,9 +118,14 @@ def main(inputFile, outputFile):
                     ## Negative strand:
                     if isNotZero(oInfo[1][0]) and isNotZero(oInfo[1][1]):
                         ## If yes: move on to printing
-                        entry = bbClasses.BEDentry(chromosome, start_pos, end_pos, sv_type, score, "-")
-                        print entry.printEntry(),
-                        FH_OUTPUT.write(entry.printEntry())
+                        
+                        ## Check score threshold
+                        if score >= minScore: 
+                            entry = bbClasses.BEDentry(chromosome, start_pos, end_pos, sv_type)
+                            entry.setScore(score)
+                            entry.setStrand("-")
+                            print entry.printEntry(),
+                            FH_OUTPUT.write(entry.printEntry())
             
             #FH_OUTPUT.write("\n")
     
