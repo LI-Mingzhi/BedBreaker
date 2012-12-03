@@ -10,6 +10,7 @@ import argparse
 import re
 import bdParser
 import xhmmParser
+import sys
 
 def isNotZero(numReads):
     if numReads == "0":
@@ -28,33 +29,48 @@ def main():
                            help="Path to the output BED file")
     
     argparser.add_argument("type",
-                           help="Input file type. [bb|xhmm] (BedBreaker|XHMM])")
+                           help="Input file type. [bd|xhmm] (BreakDancer|XHMM])")
     
     argparser.add_argument("-minScore",
                            type=int,
                            help="Minimum score threshold (1-99)")
-                  
+    
+    argparser.add_argument("-onlyCommon",
+                           type=int,
+                           help="Enter the number of samples in the BreakDancer output to only consider SVs that are shared among all samples in the file.")
+    
     args = argparser.parse_args()
     
     # TODO: Input sanity check
     inputFile = args.input
     outputFile = args.output
     inputType = args.type
-    minScore = args.minScore
-
+    
+    if not args.minScore:
+        minScore = 0
+    else:
+        minScore = args.minScore
+    
+    if not args.onlyCommon:
+        onlyCommon = 0
+    else:
+        onlyCommon = args.onlyCommon
+    
     
     ## Determine input type
     if inputType == "bd":
         print "Input type: bd"
         #dobreakdancerstuff
-        bdParser.main(inputFile, outputFile, minScore)
+        print onlyCommon
+        bdParser.main(inputFile, outputFile, minScore, onlyCommon)
         
     elif inputType == "xhmm":
         print "Input type: xhmm"
         #doxhmmstuff
         xhmmParser.main(inputFile, outputFile)
 
-    
+    else:
+        sys.exit("Incorrect input type: " + inputType)
     
 
         
